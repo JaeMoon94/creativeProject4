@@ -14,7 +14,16 @@
     <router-view />
   </div>
   <div class="footer">
-    <router-link to="/admin">Admin</router-link>
+    <div>
+      <router-link to="/">Home</router-link>
+    </div>
+    <div>
+      <router-link to="/admin">Admin</router-link>
+    </div>
+
+    <div>
+      <a href="https://github.com/BYU-CS-260-Winter-2021/lab-4-museum-of-ordinary-objects-JaeMoon94" target="_blank"> GITHUB</a>
+    </div>
   </div>
 </div>
 </template>
@@ -59,6 +68,8 @@ body {
   padding: 20px 100px 0px 100px;
   background: #e3e3e3;
   font-size: 12px;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .footer a {
