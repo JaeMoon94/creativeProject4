@@ -17,7 +17,7 @@
     <router-view />
   </div>
   <div class="footer">
-    <a class="github" href="https://github.com/JaeMoon94/creative4.git" target="_blank">gitHub link</a>
+    <a class="github" href="https://github.com/JaeMoon94/creativeProject4.git" target="_blank">gitHub link</a>
   </div>
 </div>
 </template>

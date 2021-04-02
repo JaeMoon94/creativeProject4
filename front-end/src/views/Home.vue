@@ -80,4 +80,3 @@ div.content{
       font-size: 15px;
     }
   }
-</style>
