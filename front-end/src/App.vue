@@ -1,29 +1,23 @@
 <template>
 <div id="app">
   <div class="header">
-    <router-link to="/">
-      <div class="logo">
-        <img src="/ordinary.png">
-      </div>
-    </router-link>
+
     <div class="title">
-      <h1>Museum of Ordinary Objects</h1>
+      <h1>Vasa Fitness</h1>
     </div>
+  </div>
+  <div class="menu">
+    <router-link class="router-link" to="/">Home</router-link>
+    <router-link class="router-link" to="/Membership">Membership</router-link>
+    <router-link class="router-link" to="/admin">Admin</router-link>
+    <router-link class="router-link" to="/account">Account</router-link>
+
   </div>
   <div class="content">
     <router-view />
   </div>
   <div class="footer">
-    <div>
-      <router-link to="/">Home</router-link>
-    </div>
-    <div>
-      <router-link to="/admin">Admin</router-link>
-    </div>
-
-    <div>
-      <a href="https://github.com/BYU-CS-260-Winter-2021/lab-4-museum-of-ordinary-objects-JaeMoon94" target="_blank"> GITHUB</a>
-    </div>
+    <a class="github" href="https://github.com/JaeMoon94/creative4.git" target="_blank">gitHub link</a>
   </div>
 </div>
 </template>
@@ -45,8 +39,8 @@ body {
 .header {
   display: flex;
   padding: 10px 100px 0px 100px;
-  background-color: #5BDEFF;
-  color: #1C454F;
+  background-color: #2f2f2f;
+  color: #fff;
 }
 
 .title {
@@ -55,6 +49,7 @@ body {
 
 .title h1 {
   font-size: 30px;
+  padding-left: 10px;
 }
 
 .content {
@@ -62,20 +57,57 @@ body {
   min-height: 500px;
 }
 
-/* Footer */
-.footer {
+/* menu */
+.menu {
   height: 50px;
   padding: 20px 100px 0px 100px;
-  background: #e3e3e3;
-  font-size: 12px;
+  background: #2f2f2f;
+  font-size: 20px;
+  text-decoration:none;
+  color: white;
+  border-top: 1px solid white;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+}
+.menu li {
+  display: inline;
 }
 
-.footer a {
+.router-link:link,
+.router-link:visited,
+a:visited {
+  text-decoration: none;
+  color: white;
+}
+a.github
+{
+  color: white;
+  font-size: 20px;
+}
+
+
+.menu a {
   color: #000;
 }
 
+
+
+/* footer */
+.footer {
+  height: 50px;
+  padding: 20px 100px 0px 100px;
+  font-size: 12px;
+  background:#2f2f2f;
+  color: #b5b829;
+  text-decoration: none;
+}
+
+.footer:visited {
+  color: #b5b829;
+}
+.footer a {
+  text-decoration: none;
+}
 h1 {
   font-size: 20px;
 }
@@ -83,4 +115,19 @@ h1 {
 h2 {
   font-size: 14px;
 }
+
+@media only screen and (max-width: 550px)
+  {
+   .menu
+   {
+     font-size: 15px;
+   }
+  }
+@media only screen and (max-width: 480px)
+  {
+   .menu
+   {
+     font-size: 11px;
+   }
+  }
 </style>

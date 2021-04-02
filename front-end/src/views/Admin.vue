@@ -3,15 +3,40 @@
   <h1>The Admin Page!</h1>
     <div class="heading">
       <div class="circle">1</div>
-      <h2>Add an Item</h2>
+      <h2>Add a Customer</h2>
     </div>
     <div class="add">
       <div class="form">
-        <input v-model="title" placeholder="Title">
+        <input v-model="firstName" placeholder="firstName">
+        <input v-model="lastName" placeholder="lastName">
+        <div class="radio">
+        <form class="gender form">
+          <div>
+            -Gender
+          </div>
+          <input type="radio" id="male" name="gender" value="Male">
+          <label for="male">Male</label><br>
+          <input type="radio" id="female" name="gender" value="Female">
+          <label for="female">Female</label><br>
+          <input type="radio" id="other" name="gender" value="Other">
+          <label for="other">Other</label>
+        </form>
+        <form class="membership form">
+          <div>
+            -Membership
+          </div>
+          <input type="radio" id="basic" name="membership" value="Basic">
+          <label for="basic">Basic</label><br>
+          <input type="radio" id="fit" name="membership" value="Fit">
+          <label for="fit">Fit</label><br>
+          <input type="radio" id="pro" name="membership" value="Pro">
+          <label for="pro">Pro</label>
+        </form>
+        </div>
+        <input v-model="part" placeholder="workoutPart">
+        <input type="number" v-model="age" placeholder="age">
         <p></p>
         <input type="file" name="photo" @change="fileChanged">
-        <p></p>
-         <textarea v-model="description" cols=50 rows=4 placeholder="Description" ></textarea>
         <button @click="upload">Upload</button>
       </div>
       <div class="upload" v-if="addItem">
@@ -19,25 +44,49 @@
         <img :src="addItem.path" />
       </div>
     </div>
-
      <div class="heading">
       <div class="circle">2</div>
-      <h2>Edit/Delete an Item</h2>
+      <h2>Edit/Delete a Customer</h2>
     </div>
     <div class="edit">
       <div class="form">
-        <input v-model="findTitle" placeholder="Search">
+        <input v-model="findFirstName" placeholder="Search FirstName">
         <div class="suggestions" v-if="suggestions.length > 0">
-          <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
+          <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.firstName}}
           </div>
         </div>
       </div>
       <div class="upload" v-if="findItem">
-        <input v-model="findItem.title">
+        <input v-model="findItem.firstName">
+        <input v-model="findItem.lastName">
+        <div class="radio">
+        <form class="gender form">
+          <div>
+            -Gender
+          </div>
+          <input type="radio" id="maleEdit" name="gender" value="Male">
+          <label for="male">Male</label><br>
+          <input type="radio" id="femaleEdit" name="gender" value="Female">
+          <label for="female">Female</label><br>
+          <input type="radio" id="otherEdit" name="gender" value="Other">
+          <label for="other">Other</label>
+        </form>
+        <form class="membership form">
+          <div>
+            -Membership
+          </div>
+          <input type="radio" id="basicEdit" name="membership" value="Basic">
+          <label for="basic">Basic</label><br>
+          <input type="radio" id="fitEdit" name="membership" value="Fit">
+          <label for="fit">Fit</label><br>
+          <input type="radio" id="proEdit" name="membership" value="Pro">
+          <label for="pro">Pro</label>
+        </form>
+        </div>
+        <input v-model="findItem.part" placeholder="workoutPart">
+        <input type="number" v-model="findItem.age" placeholder="age">
         <p></p>
         <img :src="findItem.path" />
-        <p></p>
-        <textarea v-model="findItem.text" cols=50 rows=4 placeholder="Description" ></textarea>
       </div>
       <div class="actions" v-if="findItem">
         <button @click="deleteItem(findItem)">Delete</button>
@@ -45,27 +94,32 @@
       </div>
     </div>
 </div>
+
 </template>
 
 <script>
 import axios from 'axios';
 export default {
   name: 'Admin',
-  data() {
+   data() {
     return {
-      title: "",
+      firstName: "",
+      lastName: "",
+      gender: "",
+      membership: "",
+      part: "",
+      age: "",
       file: null,
       addItem: null,
       items: [],
-      findTitle: "",
+      findFirstName: "",
       findItem: null,
-      description: "",
     }
   },
   computed: {
     suggestions() {
-      let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
-      return items.sort((a, b) => a.title > b.title);
+      let items = this.items.filter(item => item.firstName.toLowerCase().startsWith(this.findFirstName.toLowerCase()));
+      return items.sort((a, b) => a.firstName > b.firstName);
     }
   },
   created() {
@@ -75,8 +129,43 @@ export default {
     fileChanged(event) {
       this.file = event.target.files[0]
     },
+    async upload() {
+      var genderRadio;
+      if (document.getElementById('male').checked) {
+        genderRadio = document.getElementById('male').value;
+      } else if (document.getElementById('female').checked) {
+        genderRadio = document.getElementById('female').value;
+      } else if (document.getElementById('other').checked) {
+        genderRadio = document.getElementById('other').value;
+      }
+      var membershipRadio;
+      if (document.getElementById('basic').checked) {
+        membershipRadio = document.getElementById('basic').value;
+      } else if (document.getElementById('fit').checked) {
+        membershipRadio = document.getElementById('fit').value;
+      } else if (document.getElementById('pro').checked) {
+        membershipRadio = document.getElementById('pro').value;
+      }
+      try {
+        const formData = new FormData();
+        formData.append('photo', this.file, this.file.name)
+        let r1 = await axios.post('/api/photos', formData);
+        let r2 = await axios.post('/api/items', {
+          path: r1.data.path,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          gender: genderRadio,
+          membership: membershipRadio,
+          part: this.part,
+          age: this.age,
+        });
+        this.addItem = r2.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getItems() {
-    try {
+      try {
         let response = await axios.get("/api/items");
         this.items = response.data;
         return true;
@@ -84,28 +173,11 @@ export default {
         console.log(error);
       }
     },
-    async upload() {
-      try {
-        const formData = new FormData();
-        formData.append('photo', this.file, this.file.name)
-        let r1 = await axios.post('/api/photos', formData);
-        let r2 = await axios.post('/api/items', {
-          title: this.title,
-          path: r1.data.path,
-          text: this.description,
-        });
-        this.addItem = r2.data;
-        this.description = "";
-      } catch (error) {
-        console.log(error);
-      }
-    },
-     selectItem(item) {
-      this.findTitle = "";
+    selectItem(item) {
+      this.findFirstName = "";
       this.findItem = item;
     },
-
-        async deleteItem(item) {
+    async deleteItem(item) {
       try {
         await axios.delete("/api/items/" + item._id);
         this.findItem = null;
@@ -115,21 +187,44 @@ export default {
         console.log(error);
       }
     },
-
     async editItem(item) {
+      var genderEditRadio;
+      if (document.getElementById('maleEdit').checked) {
+        genderEditRadio = document.getElementById('maleEdit').value;
+      } else if (document.getElementById('femaleEdit').checked) {
+        genderEditRadio = document.getElementById('femaleEdit').value;
+      } else if (document.getElementById('otherEdit').checked) {
+        genderEditRadio = document.getElementById('otherEdit').value;
+      }
+      var memberEditshipRadio;
+      if (document.getElementById('basicEdit').checked) {
+        memberEditshipRadio = document.getElementById('basicEdit').value;
+      } else if (document.getElementById('fitEdit').checked) {
+        memberEditshipRadio = document.getElementById('fitEdit').value;
+      } else if (document.getElementById('proEdit').checked) {
+        memberEditshipRadio = document.getElementById('proEdit').value;
+      }
+      try {
         await axios.put("/api/items/" + item._id, {
-          title: this.findItem.title,
-          text: this.findItem.text,
+          firstName: this.findItem.firstName,
+          lastName: this.findItem.lastName,
+          gender: genderEditRadio,
+          membership: memberEditshipRadio,
+          part: this.findItem.part,
+          age: this.findItem.age,
         });
+        console.log(genderEditRadio);
+        console.log(memberEditshipRadio);
         this.findItem = null;
         this.getItems();
         return true;
+      } catch (error) {
+        console.log(error);
+      }
     },
-  }
+  },
+  
 }
-
-
-
 </script>
 
 <style scoped>
@@ -175,6 +270,16 @@ button {
 
 .form {
   margin-right: 50px;
+  display:block;
+}
+
+.gender,
+.membership {
+  width:40%;
+}
+
+.radio {
+  display:flex;
 }
 
 /* Uploaded images */
@@ -200,5 +305,4 @@ button {
   background-color: #5BDEFF;
   color: #fff;
 }
-
 </style>
